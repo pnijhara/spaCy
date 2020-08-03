@@ -21,13 +21,15 @@ class Reddit(object):
     url_re = re.compile(r"\[([^]]+)\]\(%%URL\)")
     link_re = re.compile(r"\[([^]]+)\]\(https?://[^\)]+\)")
 
-    def __init__(self, file_path, meta_keys={"subreddit": "section"}):
+    def __init__(self, file_path, meta_keys=None):
         """
         file_path (unicode / Path): Path to archive or directory of archives.
         meta_keys (dict): Meta data key included in the Reddit corpus, mapped
             to display name in Prodigy meta.
         RETURNS (Reddit): The Reddit loader.
         """
+        if meta_keys is None:
+            meta_keys = {"subreddit": "section"}
         self.meta = meta_keys
         file_path = Path(file_path)
         if not file_path.exists():

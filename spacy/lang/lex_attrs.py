@@ -210,7 +210,9 @@ def is_upper(string):
     return string.isupper()
 
 
-def is_stop(string, stops=set()):
+def is_stop(string, stops=None):
+    if stops is None:
+        stops = set()
     return string.lower() in stops
 
 
