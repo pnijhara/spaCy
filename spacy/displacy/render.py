@@ -24,13 +24,15 @@ class DependencyRenderer(object):
 
     style = "dep"
 
-    def __init__(self, options={}):
+    def __init__(self, options=None):
         """Initialise dependency renderer.
 
         options (dict): Visualiser-specific options (compact, word_spacing,
             arrow_spacing, arrow_width, arrow_stroke, distance, offset_x,
             color, bg, font)
         """
+        if options is None:
+            options = {}
         self.compact = options.get("compact", False)
         self.word_spacing = options.get("word_spacing", 45)
         self.arrow_spacing = options.get("arrow_spacing", 12 if self.compact else 20)
@@ -232,11 +234,13 @@ class EntityRenderer(object):
 
     style = "ent"
 
-    def __init__(self, options={}):
+    def __init__(self, options=None):
         """Initialise dependency renderer.
 
         options (dict): Visualiser-specific options (colors, ents)
         """
+        if options is None:
+            options = {}
         colors = {
             "ORG": "#7aecec",
             "PRODUCT": "#bfeeb7",

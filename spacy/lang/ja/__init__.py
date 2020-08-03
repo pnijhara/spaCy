@@ -133,7 +133,9 @@ def get_dtokens_and_spaces(dtokens, text, gap_tag="空白"):
 
 
 class JapaneseTokenizer(DummyTokenizer):
-    def __init__(self, cls, nlp=None, config={}):
+    def __init__(self, cls, nlp=None, config=None):
+        if config is None:
+            config = {}
         self.vocab = nlp.vocab if nlp is not None else cls.create_vocab(nlp)
         self.split_mode = config.get("split_mode", None)
         self.tokenizer = try_sudachi_import(self.split_mode)
@@ -219,7 +221,9 @@ class JapaneseTokenizer(DummyTokenizer):
         )
         return config
 
-    def _set_config(self, config={}):
+    def _set_config(self, config=None):
+        if config is None:
+            config = {}
         self.split_mode = config.get("split_mode", None)
 
     def to_bytes(self, **kwargs):
@@ -269,7 +273,9 @@ class JapaneseDefaults(Language.Defaults):
     writing_system = {"direction": "ltr", "has_case": False, "has_letters": False}
 
     @classmethod
-    def create_tokenizer(cls, nlp=None, config={}):
+    def create_tokenizer(cls, nlp=None, config=None):
+        if config is None:
+            config = {}
         return JapaneseTokenizer(cls, nlp, config)
 
 

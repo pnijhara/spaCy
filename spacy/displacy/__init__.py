@@ -21,7 +21,7 @@ RENDER_WRAPPER = None
 
 
 def render(
-    docs, style="dep", page=False, minify=False, jupyter=None, options={}, manual=False
+    docs, style="dep", page=False, minify=False, jupyter=None, options=None, manual=False
 ):
     """Render displaCy visualisation.
 
@@ -37,6 +37,8 @@ def render(
     DOCS: https://spacy.io/api/top-level#displacy.render
     USAGE: https://spacy.io/usage/visualizers
     """
+    if options is None:
+        options = {}
     factories = {
         "dep": (DependencyRenderer, parse_deps),
         "ent": (EntityRenderer, parse_ents),
@@ -69,7 +71,7 @@ def serve(
     style="dep",
     page=True,
     minify=False,
-    options={},
+    options=None,
     manual=False,
     port=5000,
     host="0.0.0.0",
@@ -88,6 +90,8 @@ def serve(
     DOCS: https://spacy.io/api/top-level#displacy.serve
     USAGE: https://spacy.io/usage/visualizers
     """
+    if options is None:
+        options = {}
     from wsgiref import simple_server
 
     if is_in_jupyter():
@@ -113,12 +117,14 @@ def app(environ, start_response):
     return [res]
 
 
-def parse_deps(orig_doc, options={}):
+def parse_deps(orig_doc, options=None):
     """Generate dependency parse in {'words': [], 'arcs': []} format.
 
     doc (Doc): Document do parse.
     RETURNS (dict): Generated dependency parse keyed by words and arcs.
     """
+    if options is None:
+        options = {}
     doc = Doc(orig_doc.vocab).from_bytes(orig_doc.to_bytes(exclude=["user_data"]))
     if not doc.is_parsed:
         warnings.warn(Warnings.W005)
@@ -175,12 +181,14 @@ def parse_deps(orig_doc, options={}):
     return {"words": words, "arcs": arcs, "settings": get_doc_settings(orig_doc)}
 
 
-def parse_ents(doc, options={}):
+def parse_ents(doc, options=None):
     """Generate named entities in [{start: i, end: i, label: 'label'}] format.
 
     doc (Doc): Document do parse.
     RETURNS (dict): Generated entities keyed by text (original text) and ents.
     """
+    if options is None:
+        options = {}
     ents = [
         {"start": ent.start_char, "end": ent.end_char, "label": ent.label_}
         for ent in doc.ents

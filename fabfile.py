@@ -23,7 +23,9 @@ def virtualenv(name, create=False, python="/usr/bin/python3.6"):
             shutil.rmtree(str(env_path))
         local("{python} -m venv {env_path}".format(python=python, env_path=VENV_DIR))
 
-    def wrapped_local(cmd, env_vars=[], capture=False, direct=False):
+    def wrapped_local(cmd, env_vars=None, capture=False, direct=False):
+        if env_vars is None:
+            env_vars = []
         return local(
             "source {}/bin/activate && {}".format(env_path, cmd),
             shell="/bin/bash",

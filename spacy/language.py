@@ -147,7 +147,7 @@ class Language(object):
     factories = {"tokenizer": lambda nlp: nlp.Defaults.create_tokenizer(nlp)}
 
     def __init__(
-        self, vocab=True, make_doc=True, max_length=10 ** 6, meta={}, **kwargs
+        self, vocab=True, make_doc=True, max_length=10 ** 6, meta=None, **kwargs
     ):
         """Initialise a Language object.
 
@@ -168,6 +168,8 @@ class Language(object):
             100,000 characters in one text.
         RETURNS (Language): The newly constructed object.
         """
+        if meta is None:
+            meta = {}
         user_factories = util.registry.factories.get_all()
         self.factories.update(user_factories)
         self._meta = dict(meta)
@@ -294,7 +296,7 @@ class Language(object):
                 return component
         raise KeyError(Errors.E001.format(name=name, opts=self.pipe_names))
 
-    def create_pipe(self, name, config=dict()):
+    def create_pipe(self, name, config=None):
         """Create a pipeline component from a factory.
 
         name (unicode): Factory name to look up in `Language.factories`.
@@ -303,6 +305,8 @@ class Language(object):
 
         DOCS: https://spacy.io/api/language#create_pipe
         """
+        if config is None:
+            config = dict()
         if name not in self.factories:
             if name == "sbd":
                 raise KeyError(Errors.E108.format(name=name))
@@ -421,7 +425,7 @@ class Language(object):
             analyze_all_pipes(self.pipeline)
         return removed
 
-    def __call__(self, text, disable=[], component_cfg=None):
+    def __call__(self, text, disable=None, component_cfg=None):
         """Apply the pipeline to some text. The text can span multiple sentences,
         and can contain arbitrary whitespace. Alignment into the original string
         is preserved.
@@ -434,6 +438,8 @@ class Language(object):
 
         DOCS: https://spacy.io/api/language#call
         """
+        if disable is None:
+            disable = []
         if len(text) > self.max_length:
             raise ValueError(
                 Errors.E088.format(length=len(text), max_length=self.max_length)
@@ -744,7 +750,7 @@ class Language(object):
         as_tuples=False,
         n_threads=-1,
         batch_size=1000,
-        disable=[],
+        disable=None,
         cleanup=False,
         component_cfg=None,
         n_process=1,
@@ -767,6 +773,8 @@ class Language(object):
 
         DOCS: https://spacy.io/api/language#pipe
         """
+        if disable is None:
+            disable = []
         if is_python2 and n_process != 1:
             warnings.warn(Warnings.W023)
             n_process = 1

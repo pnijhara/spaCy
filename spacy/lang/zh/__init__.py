@@ -66,7 +66,9 @@ def try_pkuseg_import(use_pkuseg, pkuseg_model, pkuseg_user_dict):
 
 
 class ChineseTokenizer(DummyTokenizer):
-    def __init__(self, cls, nlp=None, config={}):
+    def __init__(self, cls, nlp=None, config=None):
+        if config is None:
+            config = {}
         self.use_jieba = config.get("use_jieba", cls.use_jieba)
         self.use_pkuseg = config.get("use_pkuseg", cls.use_pkuseg)
         self.require_pkuseg = config.get("require_pkuseg", False)
@@ -131,7 +133,9 @@ class ChineseTokenizer(DummyTokenizer):
         )
         return config
 
-    def _set_config(self, config={}):
+    def _set_config(self, config=None):
+        if config is None:
+            config = {}
         self.use_jieba = config.get("use_jieba", False)
         self.use_pkuseg = config.get("use_pkuseg", False)
         self.require_pkuseg = config.get("require_pkuseg", False)
@@ -295,7 +299,9 @@ class ChineseDefaults(Language.Defaults):
     use_pkuseg = False
 
     @classmethod
-    def create_tokenizer(cls, nlp=None, config={}):
+    def create_tokenizer(cls, nlp=None, config=None):
+        if config is None:
+            config = {}
         return ChineseTokenizer(cls, nlp, config=config)
 
 
